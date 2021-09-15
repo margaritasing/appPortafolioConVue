@@ -9,7 +9,9 @@
       <hr />
       <loading  v-if="load"/>
     <div class="cards" v-for="project in projects" :key="project.id" >
-             <Card :name="project.name" 
+             <Card 
+             :created_at="project.created_at"
+             :name="project.name" 
              :description="project.description"
              :author="project.owner.login"
             :url="project.html_url"
@@ -45,11 +47,10 @@ export default {
             const res = await fetch("https://api.github.com/users/margaritasing/repos");
             const data = await res.json();
 
-            this.load =false
-            this.projects = data
-
-            console.log(data)
+            const sortedArray = data.sort((a, b) => moment(a.created_at, "DD-MM").unix() - moment(b.created_at, "DD-MM").unix());
             
+            this.load =false
+            this.projects = sortedArray                     
            
         },
     },
